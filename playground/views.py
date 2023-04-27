@@ -40,7 +40,7 @@ def verify_doctor(request):
     if request.method=='POST':
         form=signup_form_doc(request.POST)
         if form.is_valid():
-            #form.save()
+            form.save()
             return redirect('home')
         return redirect('signup')
         
