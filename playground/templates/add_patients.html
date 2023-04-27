@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sign up</title>
+  </head>
+  <body>
+    <h1>Sign up</h1>
+    <form action="http://127.0.0.1:8000/save_patients/" method="post">
+      {% csrf_token %} 
+      <input type="hidden" name="id" value="{{ id }}">
+      {{ form.as_p }}
+    
+     
+
+      <button type="submit">Sign up</button>
+    </form>
+  </body>
+
+</html>

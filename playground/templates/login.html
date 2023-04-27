@@ -5,10 +5,14 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form method="post">
+    <form action='http://127.0.0.1:8000/doc_home/' method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
 </body>
+<div id="content">
+    {% include 'message.html' %} {% block content %} 
+    {% endblock content %}
+  </div>
 </html>

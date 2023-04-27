@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<form action='http://127.0.0.1:8000/add_patient/' method="POST">
+    {% csrf_token %} 
+<input type="hidden" name="id" value="{{ id }}">
+<input type="submit"value="Add new Patient" /> <br><br>
+</form>
+
+<form action='http://127.0.0.1:8000/view_patients/' method="POST"> 
+    {% csrf_token %}
+<input type="hidden" name="id" value="{{ id }}">
+<input type="submit"value="view Patient records" /> <br><br>
+</form>
+
+<a href="default.asp" target="_blank">This is a link</a>
+</body>
+</html>

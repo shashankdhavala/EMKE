@@ -2,7 +2,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout
-from .forms import signup_form_doc
+from .forms import signup_form_doc,signup_form_patient,doctor_login
+from .models import Doctor,Patient
 from .utils import pwd_strength
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -16,51 +17,97 @@ from django.contrib import messages
 def home(request):
     return render(request, 'home.html')
 
-def login_user(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')
+
+def verify_login(request):
+    form=doctor_login(request.POST)
+    doc_username=str(request.POST['username'])
+    password=str(request.POST['password'])
+    #return HttpResponse("hello"+doc_username)
+    #check from db
+
+    #data=Doctor.objects.raw('select password from doctor where username=%s',[doc_username])
+    data=Doctor.objects.filter(email_id=doc_username)
+    if data:
+        passw=data[0].password
     else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+        passw=' '
+    
+    verified=False
+
+    if passw==password:
+        verified=True
+        
+    if verified:
+        doc={}
+        doc["id"]=data[0].doctor_id
+        return render(request,'doc_home.html',doc)    
+    else:
+        messages.success(request,'Your credentials are wrong')
+        return HttpResponseRedirect(reverse_lazy('login'))
+    
+
+
+    
 
 def verify_doctor(request):
     #return render(request,'home.html')
-    '''obj={}
-    obj["username"]=request.POST["email_id"]
-    obj["first_name"]=request.POST["first_name"]
-    obj["last_name"]=request.POST["last_name"]
-    obj["nmc_id"]=int(request.POST["nmc_id"])
-    obj["state"]=request.POST["state"]
-    obj["year"]=request.POST["year"]
-    obj["pwd1"]=request.POST["password1"]'''
+    #generate uuid before saving
+    #how to save without using form
+    #check if username is already in use
     if request.method=='POST':
         form=signup_form_doc(request.POST)
-        if form.is_valid():
+        password=str(request.POST['password'])
+        #if form.is_valid():
+        if(pwd_strength(password)):
             form.save()
             return redirect('home')
+        else:
+            messages.success(request,'Your password is too weak')
+            return HttpResponseRedirect(reverse_lazy('signup'))
+
         return redirect('signup')
         
 
-    
-    #send data to db then send signup succesfull message popup now here we can check pw1trengths and revert 
-    #before saving into db after that redirect to home page
-    '''if(pwd_strength(obj["pwd1"])):
-        redirect('home')
-        pass
-        #save to db
-    else:
-        messages.success(request,'Your password is too weak')
-        return HttpResponseRedirect(reverse_lazy('signup'))
-
     return HttpResponseRedirect(reverse_lazy('home'))    
     #if tests dont pass then return the details'''
-    
-def signup_user(request):
+
+def save_patient(request):
+    #return HttpResponse(request)
+    #fill doctor id
+    doc_id=request.POST["id"]
+    if request.method=='POST':
+        form=signup_form_patient(request.POST)
+        doc_obj=Doctor.objects.get(doctor_id=doc_id)
+        model_object=Patient(first_name=request.POST["first_name"],last_name=request.POST["last_name"],Age=request.POST["Age"],Gender=request.POST["Gender"],doctor_id=doc_obj)
+
+        model_object.save()
+        info={}
+        info["id"]="id"
+        return render(request,'doc_home.html',info)
+        #uuid gen
+        #query docid
+def add_patient(request):
+    #return HttpResponse(request)
+    context={}
+    context["id"]=request.POST["id"]
+    context["form"]=signup_form_patient()
+    return render(request,'add_patients.html',context)
+
+def view_patients(request):
+    return HttpResponse(request)
+
+def login_doctor(request):
+    context={}
+    context["form"]=doctor_login()
+    return render(request,'login.html',context)
+
+def signup_doctor(request):
     context={}
     context["form"]=signup_form_doc()
-    return render(request,'signup.html',context)
+    return render(request,'doctor_signup.html',context)
+
+def signup_patient(request):
+    context={}
+    context["form"]=signup_form_patient()
+    return render(request,'',context)
 

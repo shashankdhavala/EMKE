@@ -15,7 +15,8 @@ def pwd_strength(password):
                 d+=1
             if(i in specialchar):
                 p+=1
-    if (l>=1 and u>=1 and p>=1 and d>=1 and l+p+u+d==len(s)):
+    if (l>=1 and u>=1 and p>=1 and d>=1):
         return True
     else:
         return False
+    
