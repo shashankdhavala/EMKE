@@ -2,8 +2,50 @@
 <html>
   <head>
     <title>Sign up</title>
+    <style>
+        body {
+            background-image: url("/media/tech-planet.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+        }
+
+        .container {
+            text-align: center;
+            padding-top: 50px;
+            color: white;
+            background-color: rgba(4, 0, 0, 0.5); /* Sets the background color to white with 70% opacity */
+            border-radius: 10px; /* Adds rounded corners to the box */
+            padding: 20px;
+
+            position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+        }
+        h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        a {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 2px solid black;
+            background-color: black;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 10px;
+        }
+
+        a:hover {
+            background-color: white;
+            color: black;
+        }
+        </style>
   </head>
   <body>
+    <div class="container">
     <h1>Sign up</h1>
     <form action="verify_doctor" method="post">
       {% csrf_token %} {{ form.as_p }}
@@ -12,12 +54,16 @@
 
       {{message}}
 
-      <button type="submit">Sign up</button>
+      <a button type="submit">Sign up</button></a>
     </form>
+</div>
   </body>
+  </html>
 
+  <!--
   <div id="content">
     {% include 'message.html' %} {% block content %} 
     {% endblock content %}
   </div>
 </html>
+-->

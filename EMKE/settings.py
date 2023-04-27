@@ -27,6 +27,9 @@ SECRET_KEY = 'django-insecure-(3xama$31th!6y(1%%)#14)o+qr9f$!14_j9f--t6y(b43*p^q
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
+MEDIA_ROOT = '/home/shashankdhavala/Desktop/EMKE/playground/assets/'
+MEDIA_URL = '/media/'
+
 
 
 # Application definition
